@@ -1,0 +1,30 @@
+# Core Apify SDK
+apify>=1.7.0
+
+# AI & Orchestration
+anthropic>=0.20.0
+openai>=1.0.0
+
+# Search APIs
+google-api-python-client>=2.0.0
+requests>=2.31.0
+
+# Content Extraction
+playwright>=1.40.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Data Processing
+pandas>=2.0.0
+pydantic>=2.0.0
+
+# Async support
+aiohttp>=3.9.0
+
+# Utilities
+python-dotenv>=1.0.0
+pyyaml>=6.0
+
+# Testing (for development)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

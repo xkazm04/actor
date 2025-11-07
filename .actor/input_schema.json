@@ -1,0 +1,282 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Deep Search Actor Input",
+  "type": "object",
+  "properties": {
+    "query": {
+      "title": "Research Query",
+      "type": "string",
+      "description": "The research query to investigate. Should be a natural language question or topic.",
+      "minLength": 10,
+      "maxLength": 2000,
+      "example": "What are the latest developments in quantum computing?"
+    },
+    "maxSearches": {
+      "title": "Maximum Searches",
+      "type": "integer",
+      "description": "Maximum number of sub-queries to execute (5-100). More searches = more comprehensive but slower.",
+      "default": 20,
+      "minimum": 5,
+      "maximum": 100,
+      "example": 20
+    },
+    "researchDepth": {
+      "title": "Research Depth",
+      "type": "string",
+      "description": "Research depth mode. 'quick' for fast results (5-10 searches, $0.10-0.25), 'standard' for balanced (20-30 searches, $0.50-1.00), 'deep' for comprehensive (50-100 searches, $2.00-5.00).",
+      "enum": ["quick", "standard", "deep"],
+      "default": "standard",
+      "example": "standard"
+    },
+    "outputFormat": {
+      "title": "Output Format",
+      "type": "string",
+      "description": "Format for the final report output.",
+      "enum": ["markdown", "html", "json"],
+      "default": "markdown",
+      "example": "markdown"
+    },
+    "budgetLimit": {
+      "title": "Budget Limit (USD)",
+      "type": "number",
+      "description": "Maximum budget in USD. Execution will stop if budget is exceeded. Leave empty for no limit.",
+      "minimum": 0.01,
+      "maximum": 100.0,
+      "example": 1.0
+    },
+    "webhookUrl": {
+      "title": "Webhook URL",
+      "type": "string",
+      "description": "Optional webhook URL to receive progress updates and completion notifications.",
+      "format": "uri",
+      "example": "https://example.com/webhook"
+    },
+    "useQueryBuilder": {
+      "title": "Use Query Builder",
+      "type": "boolean",
+      "default": false,
+      "description": "Enable interactive query builder for guided query creation"
+    },
+    "queryTemplate": {
+      "title": "Query Template",
+      "type": "string",
+      "enum": ["custom", "comparison", "pros_cons", "market_analysis", "evolution", "expert_opinions"],
+      "enumTitles": ["Custom Query", "Comparison", "Pros & Cons", "Market Analysis", "Evolution Over Time", "Expert Opinions"],
+      "default": "custom",
+      "description": "Pre-built query template to use"
+    },
+    "outputScope": {
+      "title": "Output Scope",
+      "type": "object",
+      "properties": {
+        "reportLength": {
+          "type": "string",
+          "enum": ["brief", "standard", "comprehensive", "deep_dive"],
+          "default": "standard",
+          "description": "Report length preset"
+        },
+        "sections": {
+          "type": "object",
+          "properties": {
+            "executiveSummary": {"type": "boolean", "default": true},
+            "keyFindings": {"type": "boolean", "default": true},
+            "detailedAnalysis": {"type": "boolean", "default": true},
+            "methodology": {"type": "boolean", "default": false},
+            "expertOpinions": {"type": "boolean", "default": true},
+            "statistics": {"type": "boolean", "default": true},
+            "caseStudies": {"type": "boolean", "default": false},
+            "futureTrends": {"type": "boolean", "default": true},
+            "recommendations": {"type": "boolean", "default": false},
+            "bibliography": {"type": "boolean", "default": true}
+          }
+        },
+        "writingStyle": {
+          "type": "object",
+          "properties": {
+            "tone": {
+              "type": "string",
+              "enum": ["academic", "professional", "conversational", "technical"],
+              "default": "professional"
+            },
+            "readingLevel": {
+              "type": "string",
+              "enum": ["expert", "intermediate", "general"],
+              "default": "intermediate"
+            },
+            "perspective": {
+              "type": "string",
+              "enum": ["objective", "critical", "optimistic"],
+              "default": "objective"
+            }
+          }
+        }
+      }
+    },
+    "formatOptions": {
+      "title": "Format-Specific Options",
+      "type": "object",
+      "properties": {
+        "html": {
+          "type": "object",
+          "properties": {
+            "theme": {"type": "string", "enum": ["minimal", "professional", "academic", "dark"], "default": "professional"},
+            "responsive": {"type": "boolean", "default": true},
+            "printOptimized": {"type": "boolean", "default": true}
+          }
+        },
+        "pdf": {
+          "type": "object",
+          "properties": {
+            "pageSize": {"type": "string", "enum": ["A4", "Letter", "Legal"], "default": "A4"},
+            "font": {"type": "string", "enum": ["serif", "sans-serif", "monospace"], "default": "sans-serif"},
+            "colorScheme": {"type": "string", "enum": ["color", "grayscale"], "default": "color"}
+          }
+        }
+      }
+    }
+  },
+  "researchTheme": {
+    "title": "Research Theme",
+    "type": "string",
+    "enum": ["auto_detect", "academic", "news", "business", "technical", "general"],
+    "enumTitles": ["Auto-Detect", "Academic Research", "News & Journalism", "Business & Market", "Technical & Development", "General Purpose"],
+    "default": "auto_detect",
+    "description": "Optimizes source selection, analysis approach, and output style for your research context"
+  },
+  "themeOptions": {
+    "title": "Theme-Specific Options",
+    "type": "object",
+    "properties": {
+      "academic": {
+        "type": "object",
+        "properties": {
+          "citationStyle": {"type": "string", "enum": ["APA", "MLA", "Chicago", "Harvard"], "default": "APA"},
+          "includeDOI": {"type": "boolean", "default": true},
+          "minCitationCount": {"type": "integer", "minimum": 0, "default": 5}
+        }
+      },
+      "news": {
+        "type": "object",
+        "properties": {
+          "recencyBias": {"type": "string", "enum": ["very_recent", "recent", "balanced"], "default": "recent"},
+          "perspectiveDiversity": {"type": "boolean", "default": true},
+          "factCheckRequired": {"type": "boolean", "default": true}
+        }
+      },
+      "business": {
+        "type": "object",
+        "properties": {
+          "includeFinancials": {"type": "boolean", "default": true},
+          "competitorAnalysis": {"type": "boolean", "default": true},
+          "marketSizeEstimates": {"type": "boolean", "default": true}
+        }
+      },
+      "technical": {
+        "type": "object",
+        "properties": {
+          "includeCodeExamples": {"type": "boolean", "default": true},
+          "documentationPriority": {"type": "boolean", "default": true},
+          "versionSpecific": {"type": "string", "description": "Target specific version"}
+        }
+      }
+    }
+  },
+  "interactiveMode": {
+    "title": "Interactive Mode",
+    "type": "boolean",
+    "default": false,
+    "description": "Enable preview, pause, and refinement capabilities"
+  },
+  "previewOnly": {
+    "title": "Preview Only (Free)",
+    "type": "boolean",
+    "default": false,
+    "description": "Generate research preview without executing full research"
+  },
+  "refinementRequest": {
+    "title": "Refinement Instructions",
+    "type": "string",
+    "editor": "textarea",
+    "description": "Provide feedback for refining an existing report (requires previous run ID)"
+  },
+  "previousRunId": {
+    "title": "Previous Run ID",
+    "type": "string",
+    "description": "ID of previous run to refine or resume"
+  },
+  "enableDiversityAnalysis": {
+    "title": "Enable Diversity Analysis",
+    "type": "boolean",
+    "default": true,
+    "description": "Analyze source diversity and detect bias"
+  },
+  "enablePerspectiveBalancing": {
+    "title": "Enable Perspective Balancing",
+    "type": "boolean",
+    "default": false,
+    "description": "Automatically balance perspectives in source selection"
+  },
+  "targetPerspectiveDistribution": {
+    "title": "Target Perspective Distribution",
+    "type": "object",
+    "properties": {
+      "left": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.3, "description": "Target proportion of left-leaning sources"},
+      "right": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.3, "description": "Target proportion of right-leaning sources"},
+      "center": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.4, "description": "Target proportion of center/neutral sources"}
+    },
+    "description": "Target distribution for perspective balancing"
+  },
+  "diversityThreshold": {
+    "title": "Diversity Threshold",
+    "type": "number",
+    "minimum": 0,
+    "maximum": 100,
+    "default": 70,
+    "description": "Minimum diversity score threshold (0-100)"
+  },
+  "exportFormats": {
+    "title": "Export Formats",
+    "type": "array",
+    "items": {
+      "type": "string",
+      "enum": ["pdf", "docx", "html", "json", "csv", "markdown", "xml"]
+    },
+    "description": "Additional formats to export report to (beyond outputFormat)"
+  },
+  "enableSharing": {
+    "title": "Enable Sharing",
+    "type": "boolean",
+    "default": false,
+    "description": "Generate shareable links for the report"
+  },
+  "sharingOptions": {
+    "title": "Sharing Options",
+    "type": "object",
+    "properties": {
+      "shareableLink": {
+        "type": "boolean",
+        "default": false,
+        "description": "Generate shareable link with expiration"
+      },
+      "publicLink": {
+        "type": "boolean",
+        "default": false,
+        "description": "Create permanent public link"
+      },
+      "expirationDays": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 365,
+        "default": 30,
+        "description": "Days until shareable link expires"
+      },
+      "passwordProtected": {
+        "type": "boolean",
+        "default": false,
+        "description": "Protect link with password"
+      }
+    }
+  },
+  "required": ["query"]
+}
+

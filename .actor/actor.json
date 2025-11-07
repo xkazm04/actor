@@ -1,0 +1,18 @@
+{
+  "actorSpecification": 1,
+  "name": "deep-search-actor",
+  "version": "1.0.0",
+  "title": "Deep Search Actor - AI Research Engine",
+  "description": "An Apify Actor that performs comprehensive deep research using AI, similar to Perplexity Deep Research. Breaks down queries into sub-queries, searches multiple sources, and synthesizes findings.",
+  "readme": "README.MD",
+  "defaultRunTimeoutSecs": 3600,
+  "dockerfileFile": "DockerFile",
+  "storages": {
+    "dataset": "./storage/datasets/default",
+    "keyValueStore": "./storage/key_value_stores/default"
+  },
+  "input": "./.actor/input_schema.json"
+}
+
+
+

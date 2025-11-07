@@ -1,0 +1,13 @@
+# Start with Apify's Python base image
+FROM apify/actor-python:3.11
+
+# Copy requirements and install dependencies
+COPY rquirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the Actor source code
+COPY . ./
+
+# Define the command to run the Actor
+# Apify automatically runs this when the Actor starts
+CMD ["python", "actor.py"]
