@@ -17,7 +17,7 @@
     "description": "Actor performs standard depth research, decomposes query into multiple sub-queries",
     "input": {
       "query": "How does machine learning differ from traditional programming approaches?",
-      "maxSearches": 20,
+      "maxSearches": 5,
       "researchDepth": "standard"
     }
   },
