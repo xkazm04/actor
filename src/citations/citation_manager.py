@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 
 from src.citations.source_verifier import SourceVerifier
 from src.citations.citation_scorer import CitationScorer
+from src.citations.styles import get_formatter
 
 
 class Citation:

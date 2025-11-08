@@ -82,11 +82,15 @@ class ContentProcessor:
             # Extract title
             title = None
             if soup.title:
-                title = soup.title.get_text().strip()
+                title_text = soup.title.get_text()
+                if title_text:
+                    title = title_text.strip()
             else:
                 h1 = soup.find('h1')
                 if h1:
-                    title = h1.get_text().strip()
+                    title_text = h1.get_text()
+                    if title_text:
+                        title = title_text.strip()
             
             # Extract main content
             # Try common article/content selectors
@@ -146,56 +150,72 @@ class ContentProcessor:
         markdown_parts = []
         
         for child in element.children:
-            if hasattr(child, 'name'):
+            if hasattr(child, 'name') and child.name is not None:
                 tag_name = child.name.lower()
                 
                 if tag_name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
                     level = int(tag_name[1])
-                    text = child.get_text().strip()
+                    text = child.get_text()
                     if text:
-                        markdown_parts.append(f"{'#' * level} {text}\n")
+                        text = text.strip()
+                        if text:
+                            markdown_parts.append(f"{'#' * level} {text}\n")
                 
                 elif tag_name == 'p':
-                    text = child.get_text().strip()
+                    text = child.get_text()
                     if text:
-                        markdown_parts.append(f"{text}\n\n")
+                        text = text.strip()
+                        if text:
+                            markdown_parts.append(f"{text}\n\n")
                 
                 elif tag_name == 'ul' or tag_name == 'ol':
                     items = child.find_all('li', recursive=False)
                     for item in items:
-                        text = item.get_text().strip()
+                        text = item.get_text()
                         if text:
-                            prefix = "- " if tag_name == 'ul' else "1. "
-                            markdown_parts.append(f"{prefix}{text}\n")
+                            text = text.strip()
+                            if text:
+                                prefix = "- " if tag_name == 'ul' else "1. "
+                                markdown_parts.append(f"{prefix}{text}\n")
                     markdown_parts.append("\n")
                 
                 elif tag_name == 'blockquote':
-                    text = child.get_text().strip()
+                    text = child.get_text()
                     if text:
-                        markdown_parts.append(f"> {text}\n\n")
+                        text = text.strip()
+                        if text:
+                            markdown_parts.append(f"> {text}\n\n")
                 
                 elif tag_name == 'a':
-                    text = child.get_text().strip()
+                    text = child.get_text()
                     href = child.get('href', '')
+                    if text:
+                        text = text.strip()
                     if text and href:
                         markdown_parts.append(f"[{text}]({href})")
                     elif text:
                         markdown_parts.append(text)
                 
                 elif tag_name == 'strong' or tag_name == 'b':
-                    text = child.get_text().strip()
+                    text = child.get_text()
                     if text:
-                        markdown_parts.append(f"**{text}**")
+                        text = text.strip()
+                        if text:
+                            markdown_parts.append(f"**{text}**")
                 
                 elif tag_name == 'em' or tag_name == 'i':
-                    text = child.get_text().strip()
+                    text = child.get_text()
                     if text:
-                        markdown_parts.append(f"*{text}*")
+                        text = text.strip()
+                        if text:
+                            markdown_parts.append(f"*{text}*")
                 
                 elif tag_name == 'code':
-                    text = child.get_text().strip()
+                    text = child.get_text()
                     if text:
-                        markdown_parts.append(f"`{text}`")
+                        text = text.strip()
+                        if text:
+                            markdown_parts.append(f"`{text}`")
                 
                 else:
                     # Recursively process nested elements
@@ -241,9 +261,13 @@ class ContentProcessor:
         ]:
             element = soup.select_one(selector)
             if element:
-                author = element.get('content') or element.get_text()
+                author = element.get('content')
+                if not author:
+                    author_text = element.get_text()
+                    if author_text:
+                        author = author_text
                 if author:
-                    return author.strip()
+                    return str(author).strip()
         
         return None
     

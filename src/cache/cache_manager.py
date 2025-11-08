@@ -29,22 +29,28 @@ class CacheManager:
     def _generate_cache_key(self, category: str, identifier: str) -> str:
         """
         Generate cache key from category and identifier.
+        Apify KVS keys must be <= 256 chars and only contain: a-zA-Z0-9!-_.'()
         
         Args:
             category: Cache category (e.g., 'search', 'content')
             identifier: Unique identifier (query, URL, etc.)
             
         Returns:
-            Cache key string
+            Cache key string (max 256 chars, sanitized)
         """
-        # Create hash for long identifiers
-        if len(identifier) > 100:
-            identifier_hash = hashlib.md5(identifier.encode()).hexdigest()
-            key = f"{self.cache_prefix}{category}_{identifier_hash}"
-        else:
-            # Sanitize identifier for key
-            safe_id = identifier.replace(' ', '_').replace('/', '_')[:100]
-            key = f"{self.cache_prefix}{category}_{safe_id}"
+        # Always hash identifiers to ensure consistent, safe keys
+        # This handles long strings, special characters, and ensures uniqueness
+        identifier_hash = hashlib.md5(identifier.encode()).hexdigest()
+        
+        # Build key with prefix, category, and hash
+        # Format: cache_{category}_{hash}
+        key = f"{self.cache_prefix}{category}_{identifier_hash}"
+        
+        # Ensure key doesn't exceed 256 characters (should be ~50 chars, but check anyway)
+        if len(key) > 256:
+            # Truncate hash if needed (shouldn't happen, but safety check)
+            max_hash_len = 256 - len(self.cache_prefix) - len(category) - 1  # -1 for underscore
+            key = f"{self.cache_prefix}{category}_{identifier_hash[:max_hash_len]}"
         
         return key
     
