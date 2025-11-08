@@ -1,8 +1,8 @@
 {
-  "actorId": "qk4NvJzPrddjBCEqs",
+  "actorId": "YOUR_ACTOR_ID",
   "actorVersion": "latest",
   "apifyToken": null,
-  "timeout": 30000,
+  "timeout": 3600,
   "waitForFinish": true,
   "webhookUrl": null
 }
