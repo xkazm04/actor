@@ -297,6 +297,9 @@ async def main():
                 embed = sharing_manager.generate_embed_code(report_id=run_id)
                 sharing_results['embed_code'] = embed
             
+            # Step 3: Get state for saving results
+            state = engine.get_state()
+            
             # Phase 7: Mark completion
             engine.progress_streamer.complete({
                 'query': query_input.query,
@@ -337,9 +340,6 @@ async def main():
                 citations=report_result.get('citations', []),
                 citation_stats=None  # Can be enhanced with citation manager access
             )
-            
-            # Step 3: Save results
-            state = engine.get_state()
             
             # Save to dataset
             await Actor.push_data({
