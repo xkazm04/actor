@@ -1,0 +1,67 @@
+name: Build and Deploy Apify Actor
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:  # Allow manual triggering
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Actor
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install Apify CLI
+        run: npm install -g apify-cli
+      
+      - name: Verify Apify CLI installation
+        run: apify --version
+      
+      - name: Login to Apify
+        run: apify login --token ${{ secrets.APIFY_TOKEN }}
+        continue-on-error: false
+      
+      - name: Push Actor to Apify
+        run: |
+          echo "Building and pushing Actor to Apify..."
+          if [ -f "apify.json" ]; then
+            echo "Found apify.json, using it for deployment"
+            apify push
+          else
+            echo "No apify.json found, pushing with Actor ID from secret"
+            apify push --actor-id ${{ secrets.APIFY_ACTOR_ID }}
+          fi
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+      
+      - name: Get Actor info
+        run: |
+          echo "Actor deployment completed successfully!"
+          apify info
+        continue-on-error: true
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+      
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Actor built and deployed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- 🚀 Triggered by: ${{ github.event.head_commit.message }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 📝 Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 👤 Author: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+
+

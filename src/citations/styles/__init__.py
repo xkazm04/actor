@@ -61,7 +61,8 @@ class MLAStyleFormatter(CitationStyleFormatter):
             parts.append(f"{citation['author']}.")
         
         if citation.get('title'):
-            parts.append(f'"{citation['title']}."')
+            title = citation['title']
+            parts.append(f'"{title}."')
         
         if citation.get('domain'):
             parts.append(citation['domain'] + ",")
@@ -91,7 +92,8 @@ class ChicagoStyleFormatter(CitationStyleFormatter):
             parts.append(f"{citation['author']}.")
         
         if citation.get('title'):
-            parts.append(f'"{citation['title']}."')
+            title = citation['title']
+            parts.append(f'"{title}."')
         
         if citation.get('domain'):
             parts.append(citation['domain'] + ".")
@@ -122,7 +124,8 @@ class IEEEStyleFormatter(CitationStyleFormatter):
             parts.append(citation['author'] + ",")
         
         if citation.get('title'):
-            parts.append(f'"{citation['title']},"')
+            title = citation['title']
+            parts.append(f'"{title},"')
         
         if citation.get('domain'):
             parts.append(citation['domain'] + ",")

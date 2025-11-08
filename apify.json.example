@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "deep-search-researcher",
+  "version": "1.0.0",
+  "buildTag": "latest",
+  "environmentVariables": {},
+  "dockerfileFile": "DockerFile",
+  "readme": "README.MD",
+  "storages": {
+    "dataset": "default",
+    "keyValueStore": "default"
+  }
+}
+
