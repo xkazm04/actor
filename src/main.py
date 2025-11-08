@@ -226,11 +226,16 @@ async def main():
             )
             
             report_generator = ReportGenerator()
+            
+            # Ensure findings is not None - use empty dict if synthesis is None
+            synthesis = phase2_results.get('synthesis') if phase2_results else None
+            findings = synthesis if synthesis is not None else {}
+            
             report_result = report_generator.generate_report(
                 query=query_input.query,
-                findings=phase2_results.get('synthesis', {}),
-                ranked_sources=phase2_results.get('ranked_sources', [])[:20],
-                reasoning=phase2_results.get('reasoning'),
+                findings=findings,
+                ranked_sources=phase2_results.get('ranked_sources', [])[:20] if phase2_results else [],
+                reasoning=phase2_results.get('reasoning') if phase2_results else None,
                 research_plan=engine.research_plan.to_dict() if engine.research_plan else None,
                 output_format=query_input.output_format,
                 plugin_config=engine.plugin_config,  # Phase 9: Pass plugin config

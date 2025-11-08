@@ -1,0 +1,5 @@
+# Test Library Requirements
+
+# Apify Client SDK for testing
+apify-client>=1.0.0
+

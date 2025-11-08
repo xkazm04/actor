@@ -1,159 +1,162 @@
-# Deep Search Actor - Basic Skeleton
+# Deep Search Actor
 
-A basic Python Actor skeleton demonstrating deep search capabilities on Apify platform.
+An intelligent research automation system that transforms complex queries into comprehensive, well-sourced reports through iterative exploration and synthesis.
 
-## 🎯 What This Actor Does
+## Core Philosophy
 
-This Actor performs in-depth research on any topic by:
-1. Breaking down complex queries into sub-queries
-2. Performing multiple iterative searches
-3. Analyzing and synthesizing information from sources
-4. Generating a comprehensive research report
+Traditional search engines return lists of links. Deep Search Actor performs **research**—it explores, analyzes, synthesizes, and presents findings as a cohesive narrative with proper citations and quality assurance.
 
-## 📋 How It Works
+## How It Works
 
-### The Actor Flow
+### The Research Process
 
-```
-User Input → Initialize Actor → Process Query → Generate Report → Save Results
-```
+1. **Query Decomposition**: Breaks complex questions into focused sub-queries
+2. **Iterative Exploration**: Searches multiple sources, building knowledge progressively
+3. **Intelligent Analysis**: Evaluates source quality, relevance, and recency
+4. **Adaptive Refinement**: Detects knowledge gaps and continues research until comprehensive
+5. **Synthesis & Reporting**: Combines findings into structured, well-cited reports
 
-**Step-by-step:**
+### Key Principles
 
-1. **Input**: User provides a research query and configuration
-2. **Query Breakdown**: Main query is decomposed into focused sub-queries
-3. **Iterative Search**: Each sub-query is searched, building knowledge progressively
-4. **Source Analysis**: Content is fetched and analyzed for relevance
-5. **Report Generation**: Findings are synthesized into a structured report
-6. **Output**: Results saved to Apify dataset and key-value store
+**🎯 Depth Over Breadth**
+- Performs multiple iterative searches rather than single queries
+- Adapts research scope based on knowledge gaps detected
+- Continues until comprehensive coverage is achieved
 
-### Key Components
+**🔍 Quality Over Quantity**
+- Prioritizes authoritative sources (academic, verified, recent)
+- Scores sources by relevance, recency, and authority
+- Filters out low-quality or irrelevant content
 
-- **`deep_search_actor.py`**: Main Actor logic
-- **`input_schema.json`**: Defines user inputs and UI
-- **`Dockerfile`**: Container configuration
-- **`requirements.txt`**: Python dependencies
+**🧠 Intelligent Reasoning**
+- Uses LLMs to understand context and relationships
+- Detects contradictions and synthesizes multiple perspectives
+- Generates insights beyond simple aggregation
 
-## 🚀 Usage
+**📚 Proper Attribution**
+- Tracks all sources with citations
+- Supports multiple citation styles (APA, MLA, Chicago, IEEE)
+- Links claims to supporting evidence
 
-### On Apify Platform
+**⚡ Performance & Cost Optimization**
+- Caches results to avoid redundant API calls
+- Tracks costs and enforces budget limits
+- Provides tiered research modes (quick/standard/deep)
 
-1. Create a new Actor in Apify Console
-2. Upload these files
-3. Build and run
-4. Provide a research query
+**🎨 Domain-Aware Research**
+- Adapts to research context (academic, news, technical, business)
+- Prioritizes domain-appropriate sources
+- Customizes analysis approach by theme
 
-### Input Parameters
+## Research Modes
+
+**Quick** (5-10 searches, ~$0.10-0.25)
+- Fast answers for straightforward questions
+- Ideal for quick fact-checking or overviews
+
+**Standard** (20-30 searches, ~$0.50-1.00)
+- Balanced depth and speed
+- Suitable for most research needs
+
+**Deep** (50-100 searches, ~$2.00-5.00)
+- Comprehensive exploration
+- For complex topics requiring thorough analysis
+
+## Features
+
+### Core Capabilities
+- **Multi-source search** across Google, Brave, Bing APIs
+- **Content extraction** from web pages with HTML/text processing
+- **Relevance scoring** based on query match, recency, authority
+- **Knowledge gap detection** to ensure comprehensive coverage
+- **Report generation** in multiple formats (Markdown, HTML, JSON)
+
+### Advanced Features
+- **Smart caching** to reduce costs and improve speed
+- **Progress streaming** with real-time updates and webhooks
+- **Citation management** with multiple style support
+- **Domain plugins** for academic, news, technical, business research
+- **Quality metrics** for accuracy, completeness, and coherence
+- **Diversity analysis** to detect bias and balance perspectives
+
+### User Experience
+- **Query templates** for common research patterns (comparison, pros/cons, market analysis)
+- **Interactive mode** with preview, pause, and refinement capabilities
+- **Customizable output** with configurable sections and writing styles
+- **Export formats** including PDF, DOCX, HTML, JSON
+- **Sharing capabilities** with public/private links
+
+## Usage
+
+### Basic Example
 
 ```json
 {
   "query": "What are the latest developments in quantum computing?",
-  "maxSearches": 5,
+  "maxSearches": 20,
   "researchDepth": "standard",
   "outputFormat": "markdown"
 }
 ```
 
-### Output
+### Advanced Example
+
+```json
+{
+  "query": "Compare Python vs JavaScript for web development",
+  "maxSearches": 25,
+  "researchDepth": "standard",
+  "queryTemplate": "comparison",
+  "researchTheme": "technical",
+  "outputScope": {
+    "reportLength": "comprehensive",
+    "sections": {
+      "executiveSummary": true,
+      "keyFindings": true,
+      "detailedAnalysis": true,
+      "recommendations": true
+    }
+  },
+  "budgetLimit": 1.50
+}
+```
+
+## Output
 
 The Actor produces:
-- **Dataset**: Structured JSON with query, report, metadata
-- **Key-value store**: Full report under "OUTPUT" key
 
-## 🔧 Next Steps for Real Implementation
+- **Structured Report**: Comprehensive research report with citations
+- **Quality Metrics**: Accuracy, completeness, coherence scores
+- **Performance Data**: Execution time, cost breakdown, cache statistics
+- **Source Analysis**: Diversity metrics, citation coverage, quality assessment
 
-This is a **skeleton** - here's what you'd need to add:
+## Architecture Principles
 
-### 1. Real Search Integration
-```python
-# Replace mock search with actual APIs:
-- Google Custom Search API
-- Brave Search API
-- Bing Search API
-- Or call other Apify Actors (Web Scraper, Google Search scraper)
-```
+**Modular Design**: Each phase (search, analysis, reasoning, reporting) is independently testable and replaceable
 
-### 2. LLM Integration
-```python
-# Add LLM calls for:
-- Query breakdown (GPT-4, Claude, DeepSeek)
-- Content analysis and summarization
-- Report generation
-```
+**Resumable Execution**: Research state can be saved and resumed from failure points
 
-### 3. Content Extraction
-```python
-# Use real scraping:
-- Playwright for JavaScript-heavy sites
-- Crawl4AI for content extraction
-- Beautiful Soup for HTML parsing
-- Call existing Apify scrapers
-```
+**Cost Transparency**: All operations tracked with detailed cost breakdowns
 
-### 4. Advanced Features
-- Caching to reduce costs
-- Progress streaming
-- Citation tracking
-- Domain-specific research modes
-- Quality scoring for sources
+**Quality Assurance**: Built-in benchmarking and quality metrics
 
-## 💡 Understanding Apify Actor Mechanism
+**Extensibility**: Plugin system for domain-specific research approaches
 
-### Core Pattern
+## Testing
 
-All Apify Actors follow this pattern:
+See `tests/TEST_README.md` for comprehensive phase-by-phase testing guide with ready-to-use JSON inputs.
 
-```python
-from apify import Actor
+## Requirements
 
-async def main():
-    async with Actor:
-        # 1. Get input
-        input_data = await Actor.get_input()
-        
-        # 2. Do work
-        result = process(input_data)
-        
-        # 3. Save output
-        await Actor.push_data(result)
+- Python 3.11+
+- API keys for search engines (Google, Brave, Bing)
+- LLM API access (Anthropic Claude or OpenAI-compatible)
+- See `rquirements.txt` for full dependency list
 
-# Run the Actor
-asyncio.run(main())
-```
+## License
 
-### Storage Options
+This Actor is designed for research automation and can be customized for specific use cases.
 
-**Dataset** (for multiple results):
-```python
-await Actor.push_data({'item': 'data'})
-```
+---
 
-**Key-Value Store** (for single files/objects):
-```python
-await Actor.set_value('OUTPUT', report)
-```
-
-### Logging
-
-```python
-Actor.log.info('Information message')
-Actor.log.warning('Warning message')
-Actor.log.error('Error message')
-```
-
-## 📊 Pricing Strategy
-
-For the real Actor, consider:
-- **Pay-per-event**: Charge per search performed ($0.02-0.05 per search)
-- **Tiered pricing**: Quick/Standard/Deep modes at different price points
-- **Compute time**: Apify charges for platform usage automatically
-
-## 🎓 Resources
-
-- [Apify Documentation](https://docs.apify.com)
-- [Apify Python SDK](https://docs.apify.com/sdk/python)
-- [Apify $1M Challenge](https://apify.com/challenge)
-
-## 📝 License
-
-This is a basic example for educational purposes. Customize and extend as needed!
+**Transform questions into research. Transform research into knowledge.**

@@ -1,0 +1,642 @@
+[
+  {
+    "testId": "phase1.1",
+    "phase": "Phase 1",
+    "name": "Basic Query Validation",
+    "description": "Actor accepts input, validates query length, and begins research with quick mode",
+    "input": {
+      "query": "What are the latest developments in quantum computing?",
+      "maxSearches": 10,
+      "researchDepth": "quick"
+    }
+  },
+  {
+    "testId": "phase1.2",
+    "phase": "Phase 1",
+    "name": "Standard Depth Research",
+    "description": "Actor performs standard depth research, decomposes query into multiple sub-queries",
+    "input": {
+      "query": "How does machine learning differ from traditional programming approaches?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase1.3",
+    "phase": "Phase 1",
+    "name": "Deep Research Mode",
+    "description": "Actor performs comprehensive research, creates detailed sub-query breakdown",
+    "input": {
+      "query": "What are the environmental impacts of renewable energy adoption worldwide?",
+      "maxSearches": 50,
+      "researchDepth": "deep"
+    }
+  },
+  {
+    "testId": "phase1.4",
+    "phase": "Phase 1",
+    "name": "Query Sanitization",
+    "description": "Query is sanitized (excessive whitespace removed), research proceeds normally",
+    "input": {
+      "query": "  What   is   artificial   intelligence?  ",
+      "maxSearches": 15,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase2.1",
+    "phase": "Phase 2",
+    "name": "Content Extraction",
+    "description": "Actor fetches content from search results, processes HTML/text, extracts meaningful chunks",
+    "input": {
+      "query": "What are the health benefits of regular exercise?",
+      "maxSearches": 15,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase2.2",
+    "phase": "Phase 2",
+    "name": "Authority Source Prioritization",
+    "description": "Academic sources (.edu, .org) are scored higher, ranked near top of results",
+    "input": {
+      "query": "What are the latest findings in climate change research?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase2.3",
+    "phase": "Phase 2",
+    "name": "Recency Scoring",
+    "description": "Recent sources (2024-2025) are prioritized over older content",
+    "input": {
+      "query": "What are the latest developments in AI in 2025?",
+      "maxSearches": 15,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase3.1",
+    "phase": "Phase 3",
+    "name": "Research Planning",
+    "description": "Actor creates initial research plan with goals, milestones, and estimated searches",
+    "input": {
+      "query": "What are the pros and cons of remote work?",
+      "maxSearches": 25,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase3.2",
+    "phase": "Phase 3",
+    "name": "Gap Detection & Adaptive Research",
+    "description": "Actor detects knowledge gaps, continues research adaptively until coverage is sufficient",
+    "input": {
+      "query": "How do different programming languages compare in terms of performance and ease of use?",
+      "maxSearches": 30,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase3.3",
+    "phase": "Phase 3",
+    "name": "Early Completion",
+    "description": "Actor detects sufficient coverage early, completes research before max_searches limit",
+    "input": {
+      "query": "What is Python programming?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase4.1",
+    "phase": "Phase 4",
+    "name": "Markdown Report",
+    "description": "Report generated in markdown format with inline citations and bibliography",
+    "input": {
+      "query": "What are the key features of TypeScript?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "outputFormat": "markdown"
+    }
+  },
+  {
+    "testId": "phase4.2",
+    "phase": "Phase 4",
+    "name": "HTML Report",
+    "description": "Report generated in HTML format with styled citations and bibliography",
+    "input": {
+      "query": "What are the benefits of cloud computing?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "outputFormat": "html"
+    }
+  },
+  {
+    "testId": "phase4.3",
+    "phase": "Phase 4",
+    "name": "JSON Report",
+    "description": "Report generated in structured JSON format with citations array and metadata",
+    "input": {
+      "query": "What is the history of the internet?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "outputFormat": "json"
+    }
+  },
+  {
+    "testId": "phase4.4",
+    "phase": "Phase 4",
+    "name": "APA Citation Style",
+    "description": "Bibliography formatted in APA style with proper author-date citations",
+    "input": {
+      "query": "What are the effects of social media on mental health?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "outputFormat": "markdown",
+      "themeOptions": {
+        "academic": {
+          "citationStyle": "APA"
+        }
+      }
+    }
+  },
+  {
+    "testId": "phase5.1",
+    "phase": "Phase 5",
+    "name": "Quick Mode Cost Tracking",
+    "description": "Actor tracks costs, stays within budget, provides cost breakdown in results",
+    "input": {
+      "query": "What is React?",
+      "maxSearches": 10,
+      "researchDepth": "quick",
+      "budgetLimit": 0.50
+    }
+  },
+  {
+    "testId": "phase5.2",
+    "phase": "Phase 5",
+    "name": "Budget Enforcement",
+    "description": "Actor stops research when budget limit reached, reports budget exceeded",
+    "input": {
+      "query": "What are the comprehensive impacts of artificial intelligence on society?",
+      "maxSearches": 100,
+      "researchDepth": "deep",
+      "budgetLimit": 1.00
+    }
+  },
+  {
+    "testId": "phase5.3",
+    "phase": "Phase 5",
+    "name": "Cost Breakdown",
+    "description": "Results include detailed cost breakdown: LLM calls, search API calls, content fetching",
+    "input": {
+      "query": "What are the latest trends in web development?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase6.1",
+    "phase": "Phase 6",
+    "name": "Cache Hit (Repeat Query)",
+    "description": "Second run uses cached results, faster execution, cache statistics show hits",
+    "input": {
+      "query": "What is machine learning?",
+      "maxSearches": 15,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase6.2",
+    "phase": "Phase 6",
+    "name": "Similar Query Detection",
+    "description": "Actor detects similarity, reuses relevant cached content, improves performance",
+    "input": {
+      "query": "What is artificial intelligence?",
+      "maxSearches": 15,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase6.3",
+    "phase": "Phase 6",
+    "name": "Cache Statistics",
+    "description": "Results include cache statistics: hit rate, miss rate, performance improvement",
+    "input": {
+      "query": "What are the benefits of exercise?",
+      "maxSearches": 15,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase7.1",
+    "phase": "Phase 7",
+    "name": "Progress Tracking",
+    "description": "Actor emits progress events throughout execution (0%, 25%, 50%, 75%, 100%)",
+    "input": {
+      "query": "What are the key principles of design?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase7.2",
+    "phase": "Phase 7",
+    "name": "Webhook Notifications",
+    "description": "Webhook receives progress updates and completion notification with full results",
+    "input": {
+      "query": "What is the history of photography?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "webhookUrl": "https://webhook.site/your-unique-id"
+    }
+  },
+  {
+    "testId": "phase7.3",
+    "phase": "Phase 7",
+    "name": "Status Events",
+    "description": "Status events emitted for major milestones: Query decomposed, Searching sources, Analyzing content, Generating report",
+    "input": {
+      "query": "What are the latest developments in renewable energy?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase8.1",
+    "phase": "Phase 8",
+    "name": "Multiple Citation Styles - APA",
+    "description": "Citations formatted in APA style, bibliography includes proper formatting",
+    "input": {
+      "query": "What are the environmental impacts of electric vehicles?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "outputFormat": "markdown",
+      "themeOptions": {
+        "academic": {
+          "citationStyle": "APA"
+        }
+      }
+    }
+  },
+  {
+    "testId": "phase8.2",
+    "phase": "Phase 8",
+    "name": "MLA Citation Style",
+    "description": "Citations formatted in MLA style with Works Cited section",
+    "input": {
+      "query": "What are the cultural impacts of social media?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "outputFormat": "markdown",
+      "themeOptions": {
+        "academic": {
+          "citationStyle": "MLA"
+        }
+      }
+    }
+  },
+  {
+    "testId": "phase8.3",
+    "phase": "Phase 8",
+    "name": "Source Verification",
+    "description": "Academic sources (.edu) and fact-check sites verified, quality scores included",
+    "input": {
+      "query": "What are the verified health benefits of meditation?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase8.4",
+    "phase": "Phase 8",
+    "name": "Citation Coverage",
+    "description": "Report includes citation coverage analysis: percentage of claims supported, unsupported claims identified",
+    "input": {
+      "query": "What are the economic impacts of remote work?",
+      "maxSearches": 25,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase9.1",
+    "phase": "Phase 9",
+    "name": "Academic Research Plugin",
+    "description": "Actor prioritizes academic sources (arXiv, PubMed, .edu), uses APA citations, includes DOIs",
+    "input": {
+      "query": "What are the latest findings in quantum computing research?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "researchTheme": "academic",
+      "themeOptions": {
+        "academic": {
+          "citationStyle": "APA",
+          "includeDOI": true,
+          "minCitationCount": 5
+        }
+      }
+    }
+  },
+  {
+    "testId": "phase9.2",
+    "phase": "Phase 9",
+    "name": "News Research Plugin",
+    "description": "Actor prioritizes recent news sources (Reuters, BBC), balances perspectives, fact-checks claims",
+    "input": {
+      "query": "What are the latest developments in AI technology?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "researchTheme": "news",
+      "themeOptions": {
+        "news": {
+          "recencyBias": "very_recent",
+          "perspectiveDiversity": true,
+          "factCheckRequired": true
+        }
+      }
+    }
+  },
+  {
+    "testId": "phase9.3",
+    "phase": "Phase 9",
+    "name": "Technical Research Plugin",
+    "description": "Actor prioritizes technical sources (GitHub, Stack Overflow, docs), includes code examples",
+    "input": {
+      "query": "How do I implement authentication in Node.js?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "researchTheme": "technical",
+      "themeOptions": {
+        "technical": {
+          "includeCodeExamples": true,
+          "documentationPriority": true
+        }
+      }
+    }
+  },
+  {
+    "testId": "phase9.4",
+    "phase": "Phase 9",
+    "name": "Business Research Plugin",
+    "description": "Actor prioritizes business sources (SEC filings, Bloomberg), includes financial data and market analysis",
+    "input": {
+      "query": "What is the market analysis for cloud computing services?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "researchTheme": "business",
+      "themeOptions": {
+        "business": {
+          "includeFinancials": true,
+          "competitorAnalysis": true,
+          "marketSizeEstimates": true
+        }
+      }
+    }
+  },
+  {
+    "testId": "phase9.5",
+    "phase": "Phase 9",
+    "name": "Auto-Detect Theme",
+    "description": "Actor auto-detects academic theme, applies appropriate plugin configuration",
+    "input": {
+      "query": "What are the latest research papers on machine learning?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "researchTheme": "auto_detect"
+    }
+  },
+  {
+    "testId": "phase10.1",
+    "phase": "Phase 10",
+    "name": "Quality Metrics",
+    "description": "Results include quality metrics: accuracy score, completeness score, coherence score, citation quality score",
+    "input": {
+      "query": "What are the key principles of effective leadership?",
+      "maxSearches": 20,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase10.2",
+    "phase": "Phase 10",
+    "name": "Performance Monitoring",
+    "description": "Results include performance metrics: total time, speed score, milestone timings",
+    "input": {
+      "query": "What is the history of the internet?",
+      "maxSearches": 15,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "phase10.3",
+    "phase": "Phase 10",
+    "name": "Quality Report",
+    "description": "Results include comprehensive quality report with overall quality score and recommendations",
+    "input": {
+      "query": "What are the environmental benefits of renewable energy?",
+      "maxSearches": 25,
+      "researchDepth": "standard"
+    }
+  },
+  {
+    "testId": "ux1.1",
+    "phase": "UX1",
+    "name": "Query Template - Comparison",
+    "description": "Actor uses comparison template, structures report as comparison",
+    "input": {
+      "query": "Compare Python vs JavaScript",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "queryTemplate": "comparison"
+    }
+  },
+  {
+    "testId": "ux1.2",
+    "phase": "UX1",
+    "name": "Query Template - Pros & Cons",
+    "description": "Actor structures report with pros/cons sections",
+    "input": {
+      "query": "What are the pros and cons of remote work?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "queryTemplate": "pros_cons"
+    }
+  },
+  {
+    "testId": "ux1.3",
+    "phase": "UX1",
+    "name": "Query Validation",
+    "description": "Actor validates query, suggests improvements for too-short query",
+    "input": {
+      "query": "AI",
+      "maxSearches": 10,
+      "researchDepth": "quick"
+    }
+  },
+  {
+    "testId": "ux2.1",
+    "phase": "UX2",
+    "name": "Custom Sections",
+    "description": "Report includes all requested sections with comprehensive detail",
+    "input": {
+      "query": "What are the impacts of climate change?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "outputScope": {
+        "reportLength": "comprehensive",
+        "sections": {
+          "executiveSummary": true,
+          "keyFindings": true,
+          "detailedAnalysis": true,
+          "methodology": true,
+          "expertOpinions": true,
+          "statistics": true,
+          "caseStudies": true,
+          "futureTrends": true,
+          "recommendations": true,
+          "bibliography": true
+        }
+      }
+    }
+  },
+  {
+    "testId": "ux2.2",
+    "phase": "UX2",
+    "name": "Writing Style",
+    "description": "Report written in academic tone, expert reading level, objective perspective",
+    "input": {
+      "query": "What is quantum computing?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "outputScope": {
+        "writingStyle": {
+          "tone": "academic",
+          "readingLevel": "expert",
+          "perspective": "objective"
+        }
+      }
+    }
+  },
+  {
+    "testId": "ux3.1",
+    "phase": "UX3",
+    "name": "Preview Mode",
+    "description": "Actor generates preview without full execution, shows research plan and estimated costs",
+    "input": {
+      "query": "What are the latest AI developments?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "previewOnly": true
+    }
+  },
+  {
+    "testId": "ux3.2",
+    "phase": "UX3",
+    "name": "Interactive Mode",
+    "description": "Actor provides preview, allows pause/resume, supports refinement requests",
+    "input": {
+      "query": "What are the benefits of exercise?",
+      "maxSearches": 20,
+      "researchDepth": "standard",
+      "interactiveMode": true
+    }
+  },
+  {
+    "testId": "ux5.1",
+    "phase": "UX5",
+    "name": "Diversity Analysis",
+    "description": "Results include diversity analysis: source diversity score, domain distribution, perspective breakdown",
+    "input": {
+      "query": "What are the impacts of social media on society?",
+      "maxSearches": 25,
+      "researchDepth": "standard",
+      "enableDiversityAnalysis": true,
+      "diversityThreshold": 70
+    }
+  },
+  {
+    "testId": "ux5.2",
+    "phase": "UX5",
+    "name": "Perspective Balancing",
+    "description": "Actor balances sources across perspectives, reports distribution achieved",
+    "input": {
+      "query": "What are the effects of climate change policies?",
+      "maxSearches": 25,
+      "researchDepth": "standard",
+      "enablePerspectiveBalancing": true,
+      "targetPerspectiveDistribution": {
+        "left": 0.3,
+        "right": 0.3,
+        "center": 0.4
+      }
+    }
+  },
+  {
+    "testId": "ux6.1",
+    "phase": "UX6",
+    "name": "Multiple Export Formats",
+    "description": "Report exported in markdown, PDF, HTML, and JSON formats",
+    "input": {
+      "query": "What are the key features of TypeScript?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "outputFormat": "markdown",
+      "exportFormats": ["pdf", "html", "json"]
+    }
+  },
+  {
+    "testId": "ux6.2",
+    "phase": "UX6",
+    "name": "HTML Format Options",
+    "description": "HTML report uses professional theme, responsive design, print-optimized",
+    "input": {
+      "query": "What is the history of computing?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "outputFormat": "html",
+      "formatOptions": {
+        "html": {
+          "theme": "professional",
+          "responsive": true,
+          "printOptimized": true
+        }
+      }
+    }
+  },
+  {
+    "testId": "ux8.1",
+    "phase": "UX8",
+    "name": "Shareable Link",
+    "description": "Results include shareable link with 30-day expiration",
+    "input": {
+      "query": "What are the latest trends in web development?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "enableSharing": true,
+      "sharingOptions": {
+        "shareableLink": true,
+        "expirationDays": 30,
+        "passwordProtected": false
+      }
+    }
+  },
+  {
+    "testId": "ux8.2",
+    "phase": "UX8",
+    "name": "Public Link",
+    "description": "Results include permanent public link to report",
+    "input": {
+      "query": "What are the benefits of open source software?",
+      "maxSearches": 15,
+      "researchDepth": "standard",
+      "enableSharing": true,
+      "sharingOptions": {
+        "publicLink": true,
+        "passwordProtected": false
+      }
+    }
+  }
+]
+

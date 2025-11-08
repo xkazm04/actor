@@ -42,7 +42,7 @@ class ReportGenerator:
     def generate_report(
         self,
         query: str,
-        findings: Dict,
+        findings: Optional[Dict],
         ranked_sources: List[Dict],
         reasoning: Optional[Dict] = None,
         research_plan: Optional[Dict] = None,
@@ -67,6 +67,14 @@ class ReportGenerator:
         Returns:
             Dictionary with report in requested format
         """
+        # Ensure findings is not None - handle case where synthesis failed
+        if findings is None:
+            findings = {}
+        
+        # Ensure ranked_sources is not None
+        if ranked_sources is None:
+            ranked_sources = []
+        
         # UX Improvement 2: Create scope configuration
         scope_configurator = create_scope_configurator()
         if output_scope:
@@ -161,13 +169,17 @@ class ReportGenerator:
     def _generate_sections_with_style(
         self,
         query: str,
-        findings: Dict,
+        findings: Optional[Dict],
         reasoning: Optional[Dict],
         research_plan: Optional[Dict],
         style_adapter: StyleAdapter,
         scope_config: OutputScopeConfig
     ) -> Dict:
         """Generate report sections using LLM with style configuration."""
+        # Handle None findings gracefully
+        if findings is None:
+            findings = {}
+        
         key_findings = findings.get('key_findings', [])
         main_themes = findings.get('main_themes', [])
         key_facts = findings.get('key_facts', [])

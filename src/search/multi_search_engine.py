@@ -18,9 +18,10 @@ from src.cache.cache_stats import get_cache_stats
 
 class SearchAPI(Enum):
     """Supported search APIs."""
-    GOOGLE = "google"
-    BRAVE = "brave"
-    BING = "bing"
+    SERP = "serp"  # Primary: Serp API
+    GOOGLE = "google"  # Fallback
+    BRAVE = "brave"  # Fallback
+    BING = "bing"  # Fallback
 
 
 class MultiSearchEngine:
@@ -30,6 +31,10 @@ class MultiSearchEngine:
     
     def __init__(self):
         """Initialize search engine with API credentials."""
+        # Primary: Serp API
+        self.serp_api_key = os.getenv("SERP_API_KEY")
+        
+        # Fallbacks
         self.google_api_key = os.getenv("GOOGLE_SEARCH_API_KEY")
         self.google_engine_id = os.getenv("GOOGLE_SEARCH_ENGINE_ID")
         self.brave_api_key = os.getenv("BRAVE_SEARCH_API_KEY")
@@ -45,6 +50,7 @@ class MultiSearchEngine:
         
         # Rate limit tracking
         self.rate_limits = {
+            SearchAPI.SERP: {"calls": 0, "reset_time": time.time()},
             SearchAPI.GOOGLE: {"calls": 0, "reset_time": time.time()},
             SearchAPI.BRAVE: {"calls": 0, "reset_time": time.time()},
             SearchAPI.BING: {"calls": 0, "reset_time": time.time()}
@@ -53,6 +59,10 @@ class MultiSearchEngine:
     def _get_available_apis(self) -> List[SearchAPI]:
         """Get list of available APIs based on configured keys."""
         available = []
+        # Primary: Serp API
+        if self.serp_api_key:
+            available.append(SearchAPI.SERP)
+        # Fallbacks
         if self.google_api_key and self.google_engine_id:
             available.append(SearchAPI.GOOGLE)
         if self.brave_api_key:
@@ -61,16 +71,30 @@ class MultiSearchEngine:
             available.append(SearchAPI.BING)
         return available
     
-    def _select_api(self) -> Optional[SearchAPI]:
-        """Select next API using round-robin strategy."""
+    def _select_api(self, prefer_primary: bool = True) -> Optional[SearchAPI]:
+        """
+        Select next API with priority to Serp API.
+        
+        Args:
+            prefer_primary: If True, always prefer Serp API first, then fallback to others
+        """
         available = self._get_available_apis()
         if not available:
             return None
         
-        # Round-robin selection
-        api = available[self.current_api_index % len(available)]
-        self.current_api_index += 1
-        return api
+        # Always prefer Serp API if available
+        if prefer_primary and SearchAPI.SERP in available:
+            return SearchAPI.SERP
+        
+        # Round-robin selection for fallbacks
+        fallback_apis = [api for api in available if api != SearchAPI.SERP]
+        if fallback_apis:
+            api = fallback_apis[self.current_api_index % len(fallback_apis)]
+            self.current_api_index += 1
+            return api
+        
+        # If only Serp is available
+        return SearchAPI.SERP if SearchAPI.SERP in available else None
     
     async def _check_rate_limit(self, api: SearchAPI) -> bool:
         """Check if API is within rate limits."""
@@ -88,6 +112,48 @@ class MultiSearchEngine:
     async def _increment_rate_limit(self, api: SearchAPI):
         """Increment rate limit counter."""
         self.rate_limits[api]["calls"] += 1
+    
+    async def _search_serp(self, query: str, num_results: int = 10) -> List[SearchResult]:
+        """Search using Serp API (primary search method)."""
+        url = "https://serpapi.com/search"
+        params = {
+            "api_key": self.serp_api_key,
+            "q": query,
+            "num": min(num_results, 100),  # Serp API allows up to 100 results
+            "engine": "google"  # Use Google search engine via Serp API
+        }
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, params=params) as response:
+                if response.status != 200:
+                    error_text = await response.text()
+                    raise Exception(f"Serp API error: {response.status} - {error_text}")
+                
+                data = await response.json()
+                results = []
+                
+                # Serp API returns results in 'organic_results' field
+                for item in data.get("organic_results", []):
+                    results.append(SearchResult(
+                        url=item.get("link", ""),
+                        title=item.get("title", ""),
+                        snippet=item.get("snippet", ""),
+                        source_api="serp"
+                    ))
+                
+                # If we need more results, check 'related_questions' or 'answer_box'
+                if len(results) < num_results:
+                    # Add answer box if available
+                    answer_box = data.get("answer_box")
+                    if answer_box and answer_box.get("link"):
+                        results.append(SearchResult(
+                            url=answer_box.get("link", ""),
+                            title=answer_box.get("title", answer_box.get("answer", "")),
+                            snippet=answer_box.get("answer", answer_box.get("snippet", "")),
+                            source_api="serp"
+                        ))
+                
+                return results[:num_results]
     
     async def _search_google(self, query: str, num_results: int = 10) -> List[SearchResult]:
         """Search using Google Custom Search API."""
@@ -200,27 +266,44 @@ class MultiSearchEngine:
             Actor.log.warning("No search APIs configured. Using mock results.")
             return self._get_mock_results(query, num_results)
         
-        # Phase 6: Check cache first
-        api = self._select_api()
-        cached_results = await self.cache_manager.get_search_results(query, api.value)
-        
-        if cached_results:
-            Actor.log.info(f"Cache hit for query '{query[:50]}...' using {api.value}")
-            await self.cache_stats.record_hit('search')
-            # Convert cached dicts back to SearchResult objects
-            return [SearchResult(**r) if isinstance(r, dict) else r for r in cached_results]
+        # Phase 6: Check cache first (try Serp API cache first)
+        primary_api = self._select_api(prefer_primary=True)
+        if primary_api:
+            cached_results = await self.cache_manager.get_search_results(query, primary_api.value)
+            if cached_results:
+                Actor.log.info(f"Cache hit for query '{query[:50]}...' using {primary_api.value}")
+                await self.cache_stats.record_hit('search')
+                # Convert cached dicts back to SearchResult objects
+                return [SearchResult(**r) if isinstance(r, dict) else r for r in cached_results]
         
         await self.cache_stats.record_miss('search')
         
         last_error = None
+        tried_apis = set()
         
+        # Try Serp API first (primary)
         for attempt in range(max_retries):
-            api = self._select_api()
+            # On first attempt, prefer Serp API
+            # On subsequent attempts, try fallbacks
+            prefer_primary = (attempt == 0)
+            api = self._select_api(prefer_primary=prefer_primary)
+            
+            if not api:
+                break
+            
+            # Skip if we've already tried this API
+            if api in tried_apis and prefer_primary:
+                # Move to fallbacks
+                prefer_primary = False
+                api = self._select_api(prefer_primary=False)
+                if not api or api in tried_apis:
+                    break
+            
+            tried_apis.add(api)
             
             # Check rate limits
             if not await self._check_rate_limit(api):
-                Actor.log.warning(f"Rate limit reached for {api.value}. Waiting...")
-                await asyncio.sleep(60)
+                Actor.log.warning(f"Rate limit reached for {api.value}. Trying next API...")
                 continue
             
             try:
@@ -228,7 +311,9 @@ class MultiSearchEngine:
                 
                 Actor.log.info(f"Searching '{query}' using {api.value} API (attempt {attempt + 1})")
                 
-                if api == SearchAPI.GOOGLE:
+                if api == SearchAPI.SERP:
+                    results = await self._search_serp(query, num_results)
+                elif api == SearchAPI.GOOGLE:
                     results = await self._search_google(query, num_results)
                 elif api == SearchAPI.BRAVE:
                     results = await self._search_brave(query, num_results)
@@ -248,7 +333,12 @@ class MultiSearchEngine:
                 last_error = e
                 Actor.log.warning(f"Search failed with {api.value}: {e}")
                 
-                # Exponential backoff
+                # If Serp API failed, try fallbacks immediately
+                if api == SearchAPI.SERP and attempt == 0:
+                    Actor.log.info("Serp API failed, trying fallback APIs...")
+                    continue
+                
+                # Exponential backoff for retries
                 if attempt < max_retries - 1:
                     delay = retry_delay * (2 ** attempt)
                     Actor.log.info(f"Retrying in {delay} seconds...")
